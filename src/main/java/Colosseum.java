@@ -23,6 +23,11 @@ public class Colosseum {
     static final int MAX_NUM_ROUNDS = 10;
 
     /**
+     * Maximum attack + defense.
+     */
+    static final int MAX_STATS = 50;
+
+    /**
      * The first Pokemon we will be fighting.
      */
     static Pokemon firstPokemon;
@@ -31,12 +36,6 @@ public class Colosseum {
      * The second Pokemon we will be fighting.
      */
     static Pokemon secondPokemon;
-
-    /**
-     * Input scanner. Use this to take in user's input for buildPokemon(). <br>
-     * Useful functions: next(), nextInt() .
-     */
-    static Scanner myScan;
 
     /**
      * We are now reimplementing this to meet our new Pokemon specifications. <br>
@@ -102,7 +101,62 @@ public class Colosseum {
      * (Look, we can return objects too!)
      */
     public static Pokemon buildPokemon() {
+        Scanner myScan = new Scanner(System.in);
+
         Pokemon returnPokemon = null;
+
+        System.out.println("Select from the following Pokemon types:");
+        System.out.println("1 - Electric");
+        System.out.println("2 - Fire");
+        System.out.println("3 - Water");
+
+        while (returnPokemon == null) {
+            int pokemonType = myScan.nextInt();
+
+            if (pokemonType == 1) {
+                returnPokemon = new ElectricPokemon();
+            } else if (pokemonType == 2) {
+                returnPokemon = new FirePokemon();
+            } else if (pokemonType == 3) {
+                returnPokemon = new WaterPokemon();
+            } else {
+                System.out.println("Sorry, you must pick either 1, 2 or 3.");
+            }
+        }
+
+        System.out.println("Please name your Pokemon:");
+        String pokemonName = myScan.nextLine();
+        returnPokemon.setName(pokemonName);
+
+
+        System.out.printf("How many hit points will it have? (1-%d):\n", MAX_HIT_POINTS);
+        int hp = myScan.nextInt();
+        while (hp < 1 || hp > MAX_HIT_POINTS) {
+            System.out.printf("Sorry. Hit points must be between 1 and %d:\n", MAX_HIT_POINTS);
+            hp = myScan.nextInt();
+        }
+        returnPokemon.setHitPoints(hp);
+
+
+        System.out.println("Split fifty points between attack level and defense level");
+        System.out.printf("Enter attack level (1-%d):\n", MAX_STATS - 1);
+        int atk = myScan.nextInt();
+        while (atk < 1 || atk > MAX_STATS - 1) {
+            System.out.printf("Sorry. The attack level must be between 1 and %d:\n", MAX_STATS - 1);
+            atk = myScan.nextInt();
+        }
+        returnPokemon.setAttackLevel(atk);
+
+
+        int maxDef = MAX_STATS - atk;
+        System.out.printf("Enter your defense level (1-%d):\n", maxDef);
+        int def = myScan.nextInt();
+        while (def < 1 || def > maxDef) {
+            System.out.printf("Sorry. The defense level must be between 1 and %d:\n", maxDef);
+            def = myScan.nextInt();
+        }
+        returnPokemon.setDefenseLevel(def);
+
         return returnPokemon;
     }
 
@@ -211,7 +265,6 @@ public class Colosseum {
      * @param unused unused input arguments.
      */
     public static void main(final String[] unused) {
-        myScan = new Scanner(System.in);
         initializePokemon();
         determineOrder();
         System.out.println("");
@@ -241,7 +294,5 @@ public class Colosseum {
         } else {
             determineWinner();
         }
-
-        myScan.close();
     }
 }

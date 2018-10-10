@@ -58,6 +58,16 @@ public class FirePokemon extends Pokemon {
      * Implement this.
      */
     public boolean attack(final Pokemon opponent) {
+        super.attack(opponent);
+
+        boolean willAttack = this.specialtyProbability > Math.random();
+
+        if (opponent.getHitPoints() > 0 && opponent.pokeType != this.pokeType && willAttack) {
+            System.out.println(this.getName() + " will execute a specialty attack... " + this.specialtyAttack + "!!!");
+            opponent.setHitPoints(0);
+            return true;
+        }
+
         return false;
     }
 
